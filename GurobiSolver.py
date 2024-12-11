@@ -56,72 +56,25 @@ def load_model (filename: str, path: str, format: str) -> gp.Model:
 #%%
 if __name__ == "__main__":
     # Initialize directories
+    data = "Test"
     parent_dir = os.path.dirname(os.getcwd())
-    network_dir = os.path.join(parent_dir, "Networks")
-    models_dir = os.path.join(parent_dir, "Models")
+    network_dir = os.path.join(parent_dir, "Networks", data)
+    models_dir = os.path.join(parent_dir, "Models", data)
     os.makedirs(models_dir, exist_ok=True)
-
+    # Load the network structure
+    name, ext = "network_1_1.gexf".split('.')
+    G = nx.read_gexf(f"{network_dir}/{name}.{ext}")
     # Initialize parameters
-    small_uc_B = [i for i in range(1, 9+1)]
-    small_B = [5, 10, 20, 30, 40, 80, 120, 150, 200]
-
-    large_uc_B = [1, 10, 50, 100, 500, 1000, 2000, 2500, 3000]
-    large_B = [5, 100, 200, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 20000]
-
-    # # Solve instances
-    # for f in tqdm(os.listdir(network_dir)):
-    #     name, ext = f.split('.')
-    #     G = nx.read_gexf(f"{network_dir}/{name}.{ext}")
-    #     for unit_cost in [True, False]:
-    #         if unit_cost:
-    #             tag = "U"
-    #             if name.split('_')[1] in map(str, [6, 7, 8]):
-    #                 B_vals = large_uc_B
-    #             else:
-    #                 B_vals = small_uc_B
-    #         else:
-    #             tag = ""
-    #             if name.split('_')[1] in map(str, [6, 7, 8]):
-    #                 B_vals = large_B
-    #             else:
-    #                 B_vals = small_B
-    #         for B in B_vals:
-    #             # Make directories
-    #             model_dir = os.path.join(models_dir, f"Model_{B}{tag}")
-    #             for format in ["mps", "sol", "lp", "json"]:
-    #                 os.makedirs(f"{model_dir}/{format}", exist_ok=True)
-    #             # Solve the model
-    #             m = solve_model(name, model_dir, B, unit_cost)
-
-    # # Solve instances with B = 0 (equivalent to the max flow problem)
-    # for f in tqdm(os.listdir(network_dir)):
-    #     name, ext = f.split('.')
-    #     G = nx.read_gexf(f"{network_dir}/{name}.{ext}")
-    #     unit_cost = False
-    #     tag = ""
-    #     B = 0
-    #     # Make directories
-    #     model_dir = os.path.join(models_dir, f"Model_{B}{tag}")
-    #     for format in ["mps", "sol", "lp", "json"]:
-    #         os.makedirs(f"{model_dir}/{format}", exist_ok=True)
-    #     # Solve the model
-    #     m = solve_model(name, model_dir, B, unit_cost)
-
-
-    # # Load the network structure
-    # name, ext = "network_1_1.gexf".split('.')
-    # G = nx.read_gexf(f"{network_dir}/{name}.{ext}")
-    # # Initialize parameters
-    # B = 5
-    # unit_cost = True
-    # tag = "U" if unit_cost else ""
-    # # Make directories
-    # model_dir = os.path.join(models_dir, f"Model_{B}{tag}")
-    # for format in ["mps", "sol", "lp", "json"]:
-    #     os.makedirs(f"{model_dir}/{format}", exist_ok=True)
-    # # Solve the model
-    # m = solve_model(name, model_dir, B, unit_cost)
-    # print(f"Objective value: {m.objVal}")
-    # for var in m.getVars():
-    #     if var.VarName.startswith("z") and var.X > 0:
-    #         print(f"{var.VarName}: {var.X}")
+    B = 5
+    unit_cost = True
+    tag = "U" if unit_cost else ""
+    # Make directories
+    model_dir = os.path.join(models_dir, f"Model_{B}{tag}")
+    for format in ["mps", "sol", "lp", "json"]:
+        os.makedirs(f"{model_dir}/{format}", exist_ok=True)
+    # Solve the model
+    m = solve_model(name, model_dir, B, unit_cost)
+    print(f"Objective value: {m.objVal}")
+    for var in m.getVars():
+        if var.VarName.startswith("z") and var.X > 0:
+            print(f"{var.VarName}: {var.X}")

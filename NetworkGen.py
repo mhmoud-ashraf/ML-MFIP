@@ -141,68 +141,10 @@ def load_network (filename: str) -> nx.DiGraph:
     return G
 #%%
 if __name__ == "__main__":
-    # Create a directory to save network structures
-    parent_dir = os.path.dirname(os.getcwd())
-    network_dir = os.path.join(parent_dir, "Networks")
-    os.makedirs(network_dir, exist_ok=True)
-    # Desired network structures
-    small_networks_h = {1: [5, 10, 25, 1],
-                        3: [8, 27, 50, 1],
-                        5: [30, 100, 450, 1]}
-    large_networks_h = {6: [1000, 1500, 1500, 2000, 2500, 2500, 3000, 5000, 10000, 1],
-                        7: [2500, 3000, 3000, 4500, 4500, 7000, 7000, 10000, 15000, 1],
-                        8: [2500, 3000, 3000, 4500, 4500, 7000, 7000, 10000, 15000, 1]}
-    large_networks_c = {0: (50,100), 1: (1,75), 2: (1,50), 3: (1,40), 4: (1,40), 5: (1,30), 6: (1,30), 7: (1,20), 8: (1,20), 9: (50,100)}
-    large_networks_b = {0: (100,101), 1: (1,75), 2: (1,50), 3: (1,40), 4: (1,40), 5: (1,30), 6: (1,30), 7: (1,20), 8: (1,20), 9: (100,101)}
-    networks_nh = {2: [5, 10, 25, 40, 1],
-                   4: [12, 50, 200, 410, 1]}
-    replications = {1: 10, 3: 10, 5: 10, 6: 1, 7: 1, 8: 1, 2: 10, 4: 10}
-
-    for id, nNodes in tqdm(small_networks_h.items()):
-        for k in range(1, replications[id]+1):
-            G = hierarchical_network(nNodes, seed=k)
-            # Add edge attributes
-            random.seed(k)
-            if k <= 5:
-                c_u = 20
-            else:
-                c_u = 50
-            for u,v in G.edges:
-                G[u][v]["c"] = random.randint(1, c_u)
-                G[u][v]["b"] = random.randint(1, 50)
-            save_network_structure(G, f"{network_dir}/network_{id}_{k}")
-
-    for id, nNodes in tqdm(large_networks_h.items()):
-        for k in range(1, replications[id]+1):
-            G = hierarchical_network(nNodes, seed=k)# Add edge attributes
-            random.seed(k)
-            for u,v in G.edges:
-                u_level = G.nodes[u]['subset']
-                G[u][v]["c"] = random.randint(large_networks_c[u_level][0], large_networks_c[u_level][1])
-                G[u][v]["b"] = random.randint(large_networks_b[u_level][0], large_networks_b[u_level][1])
-            save_network_structure(G, f"{network_dir}/network_{id}_{k}")
-
-    for id, nNodes in tqdm(networks_nh.items()):
-        for k in range(1, replications[id]+1):
-            G = non_hierarchical_network(nNodes, seed=k)
-            # Add edge attributes
-            random.seed(k)
-            if k <= 5:
-                c_u = 20
-            else:
-                c_u = 50
-            for u,v in G.edges:
-                G[u][v]["c"] = random.randint(1, c_u)
-                G[u][v]["b"] = random.randint(1, 50)
-            save_network_structure(G, f"{network_dir}/network_{id}_{k}")
-
-    # Load network structure
-    # G = load_network(f"{network_dir}/network_1_1")
-
-    # nNodes = [5, 10, 25, 40, 1]
-    # G = non_hierarchical_network(nNodes)
-    # print(f"Number of nodes: {G.number_of_nodes()}")
-    # print(f"Number of edges: {G.number_of_edges()}")
+    nNodes = [5, 10, 25, 40, 1]
+    G = non_hierarchical_network(nNodes)
+    print(f"Number of nodes: {G.number_of_nodes()}")
+    print(f"Number of edges: {G.number_of_edges()}")
 
     # c_in_degree = 0
     # c_out_degree = 0
