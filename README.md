@@ -1,1 +1,1 @@
-This repo implements the research in Baycik, N. O. (2022). Machine learning based approaches to solve the maximum flow network interdiction problem. Computers & Industrial Engineering, 167, 107873. https://doi.org/10.1016/j.cie.2021.107873.
+This repo implements the introduced machine learning-based approach for solving the maximum flow interdiction problem in Baycik, N. O. (2022). Machine learning based approaches to solve the maximum flow network interdiction problem. Computers & Industrial Engineering, 167, 107873. https://doi.org/10.1016/j.cie.2021.107873.
