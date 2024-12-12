@@ -70,3 +70,24 @@ print(f"Graph generated with {G.number_of_nodes()} nodes and {G.number_of_edges(
 
 for node in G.nodes:
     print(f"Node {node} has in-degree {G.in_degree(node)} and out-degree {G.out_degree(node)}")
+#%%
+# path = os.path.join(parent_dir, "Models", "Model_1U")
+# m = load_model("network_1_1", path)
+# m.ObjVal
+# for v in m.getVars():
+#     if 'z' in v.VarName and v.x > 0:
+#         print(v.varName, v.x)
+# json_data = load_json("network_1_1", path)
+# json_data["ObjVal"]
+# sol_data = load_sol("network_1_1", path)
+# for v in sol_data:
+#     if 'z' in v and sol_data[v] > 0:
+#         print(v, sol_data[v])
+#%%
+# network_dir = os.path.join(parent_dir, "Networks")
+# G = nx.read_gexf(f"{network_dir}/{'network_1_1'}.{'gexf'}")
+# N = list(G.nodes())
+# sink = G.nodes[N[-1]]["subset"]
+# node = G.nodes['0']["subset"]
+# egde = ('0', '1')
+# nx.get_edge_attributes(G, 'c')[egde]

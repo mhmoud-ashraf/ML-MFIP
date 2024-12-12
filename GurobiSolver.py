@@ -1,4 +1,5 @@
 import os
+import json
 from tqdm import tqdm
 import networkx as nx
 import gurobipy as gp
@@ -50,16 +51,28 @@ def solve_model (filename: str, path: str, B:int, unit_cost: bool) -> gp.Model:
         m.write(f"{path}/{format}/{m.ModelName}.{format}")
     return m
 
-def load_model (filename: str, path: str, format: str) -> gp.Model:
-    m = gp.read(f"{path}/{filename}.{format}")
+def load_model (filename: str, path: str, format: str="mps") -> gp.Model:
+    env = gp.Env(empty=True)
+    env.setParam('OutputFlag', 0) # suppress Gurobi output
+    env.start()
+    m = gp.read(os.path.join(path, format, f"{filename}.{format}"), env)
+    m.optimize()
     return m
+
+def load_sol (filename: str, path: str, format: str="sol") -> dict:
+    with open(os.path.join(path, format, f"{filename}.{format}"), 'r') as file:
+        return {line.split()[0]: float(line.split()[1]) for line in file if '#' not in line}
+
+def load_json (filename: str, path: str, format: str="json") -> dict:
+    with open(os.path.join(path, format, f"{filename}.{format}"), 'r') as file:
+        return json.load(file)['SolutionInfo']
 #%%
 if __name__ == "__main__":
     # Initialize directories
     data = "Test"
     parent_dir = os.path.dirname(os.getcwd())
     network_dir = os.path.join(parent_dir, "Networks", data)
-    models_dir = os.path.join(parent_dir, "Models", data)
+    models_dir = os.path.join(parent_dir, "Models-gp", data)
     os.makedirs(models_dir, exist_ok=True)
     # Load the network structure
     name, ext = "network_1_1.gexf".split('.')
